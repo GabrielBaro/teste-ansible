@@ -1,0 +1,71 @@
+################################################################################################
+# Autor: Danilo Barros de Medeiros
+# Playbook: Instalação Zabbix Agent
+# Versão: 1.0
+# Data: 05-04-2022
+# Email: danilo@luniobr.com
+#
+#################################################################################################
+# ESTRUTURA DO PLAYBOOK
+#
+# zabbix-agent.yml     
+# ├── zabbix-agent
+# │   ├── defaults
+# │   ├── files
+# │   │   └── zabbix_agent2-5.4.msi
+# │   ├── handlers
+# │   ├── meta
+# │   ├── tasks
+# │   │   └── main.yml
+# │   ├── templates
+# │   │   ├── zabbix_agent2.j2
+# │   │   └── zabbix_win_agent2.j2
+# │   └── vars
+# ├── zabbix-remove
+# │   ├── defaults
+# │   ├── files
+# │   ├── handlers
+# │   ├── meta
+# │   ├── tasks
+# │   │   ├── main.yml
+# │   │   ├── main.yml.save
+# │   │   └── main.yml.save.1
+# │   ├── templates
+# │   └── vars
+#
+#
+#-- PLAYBOOK DE INSTALAÇÃO DO ZABBIX-AGENTE2
+#
+# ansible-playbook oferece cinco opções de linha de comando relacionadas a tags:
+#  --tags all- execute todas as tarefas, ignore tags (comportamento padrão)
+#  --tags [tag1, tag2]- execute apenas tarefas com a tag tag1ou a tagtag2
+#  --skip-tags [tag3, tag4]- execute todas as tarefas, exceto aquelas com a tag tag3ou a tagtag4
+#  --tags tagged- execute apenas tarefas com pelo menos uma tag
+#  --tags untagged- execute apenas tarefas sem tags
+#
+#-- INSTRUÇÕES PARA EXECUÇÃO DO PLAYBOOK ZABBIX AGENTE 
+#
+#
+# Exemplo - Instalação:   
+#   
+#       ansible-playbook -i SEU_ARQUIVO_INVENTARIO zabbix-agent.yml --tags "zbx-install"
+#
+# Exemplo - Remoção
+#
+#       ansible-playbook -i SEU_ARQUIVO_INVENTARIO zabbix-agent.yml --tags "zbx-remove"
+#
+#
+#################################################################################################
+---
+
+- name: Preparando instalação do Zabbix Agent 
+  hosts: all
+  vars:
+    zbx_srv: monitoramento.cloudprovtel.com
+    redhat_rpm: rpm -i https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/zabbix-release-5.4-1.el8.noarch.rpm
+    debian8_deb: deb https://repo.zabbix.com/zabbix/5.4/debian bullseye main
+    debian8_deb_src: deb-src https://repo.zabbix.com/zabbix/5.4/debian bullseye main 
+  
+  roles:
+    - zabbix-agent
+    - zabbix-remove
